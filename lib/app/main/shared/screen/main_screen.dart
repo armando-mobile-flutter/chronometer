@@ -100,69 +100,48 @@ class _AndroidMain extends StatelessWidget {
           )
         ],
       ),
-      body: Column(
-        children: <Widget>[
+      body: ListView(
+        padding: EdgeInsets.all(15.0),
+        children: [
           Container(
-            padding: const EdgeInsets.only(left: 20),
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(
-                'Counter',
-                style: Theme.of(context).textTheme.bodySmall,
-                textAlign: TextAlign.start,
-              ),
-            ),
+            height: 30,
+            child: const Text('Counter', textAlign: TextAlign.start),
           ),
-          ListView(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.add_circle_outline),
-                title: const Text('Local'),
-                subtitle: const Text('0'),
-                trailing: const Icon(Icons.lock),
-                onTap: () {},
-                onLongPress: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.add_circle_outline),
-                title: const Text('Global'),
-                subtitle: const Text('0'),
-                trailing: const Icon(Icons.lock_open),
-                onTap: () {},
-                onLongPress: () {},
-              ),
-            ],
+          ListTile(
+            leading: const Icon(Icons.add_circle_outline),
+            title: const Text('Local'),
+            subtitle: const Text('0'),
+            trailing: const Icon(Icons.lock),
+            onTap: () {},
+            onLongPress: () {},
+          ),
+          ListTile(
+            leading: const Icon(Icons.add_circle_outline),
+            title: const Text('Global'),
+            subtitle: const Text('0'),
+            trailing: const Icon(Icons.lock_open),
+            onTap: () {},
+            onLongPress: () {},
           ),
           Container(
-            padding: const EdgeInsets.only(left: 20),
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(
-                'Stopwatch',
-                style: Theme.of(context).textTheme.bodySmall,
-                textAlign: TextAlign.start,
-              ),
-            ),
+            height: 30,
+            child: const Text('Stopwatch', textAlign: TextAlign.start),
           ),
-          ListView(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.timer),
-                title: const Text('Local'),
-                subtitle: const Text('0'),
-                trailing: const Icon(Icons.lock),
-                onTap: () {},
-                onLongPress: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.timer),
-                title: const Text('Global'),
-                subtitle: const Text('0'),
-                trailing: const Icon(Icons.lock_open),
-                onTap: () {},
-                onLongPress: () {},
-              ),
-            ],
+          ListTile(
+            leading: const Icon(Icons.timer),
+            title: const Text('Local'),
+            subtitle: const Text('0'),
+            trailing: const Icon(Icons.lock),
+            onTap: () {},
+            onLongPress: () {},
+          ),
+          ListTile(
+            leading: const Icon(Icons.timer),
+            title: const Text('Global'),
+            subtitle: const Text('0'),
+            trailing: const Icon(Icons.lock_open),
+            onTap: () {},
+            onLongPress: () {},
           )
         ],
       ));
