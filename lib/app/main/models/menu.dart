@@ -32,6 +32,10 @@ class Menu {
     _name = obj['name'];
     _options = obj['options'];
   }
+
+  void printMenuAndOption(MenuOption option) {
+    print("Menu: ${this._name}, option: ${option.name}");
+  }
 }
 
 class MenuOption {

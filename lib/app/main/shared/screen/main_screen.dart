@@ -64,7 +64,9 @@ class _IOSMain extends StatelessWidget {
                                   trailing: option.isGlobal
                                       ? Icon(CupertinoIcons.share_up)
                                       : Icon(CupertinoIcons.lock_circle),
-                                  onTap: () {},
+                                  onTap: () {
+                                    item.printMenuAndOption(option);
+                                  },
                                 ))
                       ],
                     )),
@@ -93,48 +95,32 @@ class _AndroidMain extends StatelessWidget {
         ],
       ),
       body: ListView(
-        padding: EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(15.0),
         children: [
-          Container(
-            height: 30,
-            child: const Text('Counter', textAlign: TextAlign.start),
-          ),
-          ListTile(
-            leading: const Icon(Icons.add_circle_outline),
-            title: const Text('Local'),
-            subtitle: const Text('0'),
-            trailing: const Icon(Icons.lock),
-            onTap: () {},
-            onLongPress: () {},
-          ),
-          ListTile(
-            leading: const Icon(Icons.add_circle_outline),
-            title: const Text('Global'),
-            subtitle: const Text('0'),
-            trailing: const Icon(Icons.lock_open),
-            onTap: () {},
-            onLongPress: () {},
-          ),
-          Container(
-            height: 30,
-            child: const Text('Stopwatch', textAlign: TextAlign.start),
-          ),
-          ListTile(
-            leading: const Icon(Icons.timer),
-            title: const Text('Local'),
-            subtitle: const Text('0'),
-            trailing: const Icon(Icons.lock),
-            onTap: () {},
-            onLongPress: () {},
-          ),
-          ListTile(
-            leading: const Icon(Icons.timer),
-            title: const Text('Global'),
-            subtitle: const Text('0'),
-            trailing: const Icon(Icons.lock_open),
-            onTap: () {},
-            onLongPress: () {},
-          )
+          ...menu.map((Menu item) => Column(
+                children: <Widget>[
+                  Container(
+                    height: 30,
+                    child: Text(item.name, textAlign: TextAlign.start),
+                  ),
+                  ...item.options.map((MenuOption option) => ListTile(
+                        leading: item.name == 'Counter'
+                            ? Icon(Icons.add_circle_outline)
+                            : Icon(Icons.timer),
+                        title: Text(option.name),
+                        subtitle: const Text('0'),
+                        trailing: option.isGlobal
+                            ? Icon(Icons.lock_open)
+                            : Icon(Icons.lock),
+                        onTap: () {
+                          item.printMenuAndOption(option);
+                        },
+                        onLongPress: () {
+                          item.printMenuAndOption(option);
+                        },
+                      ))
+                ],
+              ))
         ],
       ));
 }
