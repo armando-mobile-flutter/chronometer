@@ -80,7 +80,10 @@ class _IOSMain extends StatelessWidget {
                                 : Icon(CupertinoIcons.lock_circle,
                                     color: BuildTheme.getIOSIconColor(context)),
                             onTap: () {
-                              item.printMenuAndOption(option);
+                              item.renderScreen(
+                                  option,
+                                  (Widget screen) =>
+                                      _pushScreen(context, screen));
                             },
                           ))
                     ],
@@ -133,11 +136,10 @@ class _AndroidMain extends StatelessWidget {
                             ? Icon(Icons.lock_open)
                             : Icon(Icons.lock),
                         onTap: () {
-                          item.printMenuAndOption(option);
+                          item.renderScreen(option,
+                              (Widget screen) => _pushScreen(context, screen));
                         },
-                        onLongPress: () {
-                          item.printMenuAndOption(option);
-                        },
+                        onLongPress: () {},
                       ))
                 ],
               ))

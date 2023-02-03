@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:chronometer/app/main/counter/counter_screen.dart';
+
 class Menu {
   int _id = 0;
   String _name = '';
@@ -33,8 +36,13 @@ class Menu {
     _options = obj['options'];
   }
 
-  void printMenuAndOption(MenuOption option) {
-    print("Menu: ${this._name}, option: ${option.name}");
+  /// Function that render screen by meu option
+  void renderScreen(MenuOption option, Function pushScreen) {
+    if (this._name == 'Counter') {
+      pushScreen((option.name == 'Global')
+          ? CouterScreenWithGlobalState()
+          : CouterScreenWithLocalState());
+    }
   }
 }
 
