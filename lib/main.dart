@@ -1,17 +1,25 @@
-import 'package:flutter/foundation.dart';
+import 'package:chronometer/app/main/blocs/preferences/preferences_event.dart';
+import 'package:chronometer/app/main/blocs/preferences/preferences_state.dart';
+import 'package:chronometer/app/main/repositories/preferences_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:chronometer/app/main/shared/screen/index.dart';
+import 'package:chronometer/app/main/blocs/index.dart';
+import 'package:chronometer/app/main/repositories/index.dart';
 
 void main() {
-  runApp(const MyApp());
-}
+  WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = BlocDelegate();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final preferencesRepository = PreferencesRepository();
+  final preferenceBloc =
+      PreferencesBloc(preferencesRepository: preferencesRepository);
+  preferenceBloc.stream
+      .firstWhere((state) => state is PreferencesLoaded)
+      .then((_) => runApp(App(
+            preferencesRepository: preferencesRepository,
+            preferencesBloc: preferenceBloc,
+          )));
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return App();
-  }
+  preferenceBloc.add(LoadPreferences());
 }

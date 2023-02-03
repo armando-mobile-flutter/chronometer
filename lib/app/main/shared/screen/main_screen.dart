@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:chronometer/app/main/models/index.dart';
+import 'package:chronometer/app/main/shared/screen/theme_selector_screen.dart';
+import 'package:chronometer/app/main/shared/utils/index.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -29,58 +31,76 @@ class _IOSMain extends StatelessWidget {
   final String title;
   final List<Menu> menu;
 
+  void _pushScreen(BuildContext context, Widget screen) {
+    Navigator.of(context).push(CupertinoPageRoute(builder: (_) => screen));
+  }
+
   @override
-  Widget build(BuildContext context) => CupertinoPageScaffold(
-        child: CustomScrollView(
-          slivers: <Widget>[
-            CupertinoSliverNavigationBar(
-              leading: const Icon(CupertinoIcons.clock),
-              largeTitle: Text(title,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20.0)),
-              trailing: CupertinoButton(
-                child: const Icon(
-                  CupertinoIcons.settings,
-                  size: 32,
-                ),
-                padding: EdgeInsets.zero,
-                onPressed: () {},
+  Widget build(BuildContext context) {
+    //TODO: Create variable for each bloc
+
+    return CupertinoPageScaffold(
+      child: CustomScrollView(
+        slivers: <Widget>[
+          CupertinoSliverNavigationBar(
+            leading: Icon(CupertinoIcons.clock,
+                color: BuildTheme.getIOSIconColor(context)),
+            largeTitle: Text(title,
+                textAlign: TextAlign.center, style: TextStyle(fontSize: 20.0)),
+            trailing: CupertinoButton(
+              child: Icon(
+                CupertinoIcons.settings,
+                size: 32,
+                color: BuildTheme.getIOSIconColor(context),
               ),
+              padding: EdgeInsets.zero,
+              onPressed: () =>
+                  _pushScreen(context, const ThemeSelectorScreen()),
             ),
-            SliverFillRemaining(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                ...menu.map((Menu item) => CupertinoListSection(
-                      header: Text(item.name),
-                      children: <CupertinoListTile>[
-                        ...item.options.map(
-                            (MenuOption option) => CupertinoListTile.notched(
-                                  leading: item.name == 'Counter'
-                                      ? Icon(CupertinoIcons.add_circled)
-                                      : Icon(CupertinoIcons.timer),
-                                  title: Text(option.name),
-                                  subtitle: const Text('0'),
-                                  trailing: option.isGlobal
-                                      ? Icon(CupertinoIcons.share_up)
-                                      : Icon(CupertinoIcons.lock_circle),
-                                  onTap: () {
-                                    item.printMenuAndOption(option);
-                                  },
-                                ))
-                      ],
-                    )),
-              ],
-            ))
-          ],
-        ),
-      );
+          ),
+          SliverFillRemaining(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              ...menu.map((Menu item) => CupertinoListSection(
+                    header: Text(item.name),
+                    children: <CupertinoListTile>[
+                      ...item.options.map((MenuOption option) =>
+                          CupertinoListTile.notched(
+                            leading: item.name == 'Counter'
+                                ? Icon(CupertinoIcons.add_circled,
+                                    color: BuildTheme.getIOSIconColor(context))
+                                : Icon(CupertinoIcons.timer,
+                                    color: BuildTheme.getIOSIconColor(context)),
+                            title: Text(option.name),
+                            subtitle: const Text('0'),
+                            trailing: option.isGlobal
+                                ? Icon(CupertinoIcons.share_up,
+                                    color: BuildTheme.getIOSIconColor(context))
+                                : Icon(CupertinoIcons.lock_circle,
+                                    color: BuildTheme.getIOSIconColor(context)),
+                            onTap: () {
+                              item.printMenuAndOption(option);
+                            },
+                          ))
+                    ],
+                  )),
+            ],
+          ))
+        ],
+      ),
+    );
+  }
 }
 
 class _AndroidMain extends StatelessWidget {
   const _AndroidMain({super.key, required this.title, required this.menu});
   final String title;
   final List<Menu> menu;
+
+  void _pushScreen(BuildContext context, Widget screen) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -90,7 +110,7 @@ class _AndroidMain extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.palette),
-            onPressed: () => {},
+            onPressed: () => _pushScreen(context, const ThemeSelectorScreen()),
           )
         ],
       ),
