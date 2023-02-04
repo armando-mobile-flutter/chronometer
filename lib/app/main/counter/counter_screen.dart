@@ -28,7 +28,7 @@ class CouterScreenWithLocalState extends StatelessWidget {
 }
 
 class _IOSCounterScreen extends StatelessWidget {
-  _IOSCounterScreen({super.key, required this.title});
+  const _IOSCounterScreen({super.key, required this.title});
   final String title;
 
   @override
@@ -36,24 +36,70 @@ class _IOSCounterScreen extends StatelessWidget {
     final bloc = BlocProvider.of<CounterBloc>(context);
 
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text(title),
-        leading: CupertinoButton(
-          child: Icon(CupertinoIcons.back,
-              size: 32, color: BuildTheme.getIOSIconColor(context)),
-          padding: EdgeInsets.zero,
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      child: Container(
-        child: const Text('Body', textAlign: TextAlign.center),
-      ),
-    );
+        child: CustomScrollView(
+      slivers: <Widget>[
+        CupertinoSliverNavigationBar(
+            leading: CupertinoButton(
+              child: Icon(CupertinoIcons.back,
+                  size: 32, color: BuildTheme.getIOSIconColor(context)),
+              padding: EdgeInsets.zero,
+              onPressed: () => Navigator.pop(context),
+            ),
+            largeTitle: Text(title,
+                textAlign: TextAlign.center, style: TextStyle(fontSize: 20.0))),
+        SliverFillRemaining(
+            child: Stack(
+          alignment: AlignmentDirectional.centerStart,
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                    child: BlocBuilder(
+                  bloc: bloc,
+                  builder: (context, state) => Text(
+                    '$state',
+                    style: const TextStyle(
+                        fontSize: 100, fontWeight: FontWeight.bold),
+                  ),
+                )),
+                const SizedBox(height: 160.0),
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      CupertinoButton(
+                        child: Icon(CupertinoIcons.add,
+                            size: 50,
+                            color: BuildTheme.getIOSIconColor(context)),
+                        onPressed: () => bloc.add(CounterEvent.increment),
+                      ),
+                      CupertinoButton(
+                        child: Icon(CupertinoIcons.minus,
+                            size: 50,
+                            color: BuildTheme.getIOSIconColor(context)),
+                        onPressed: () => bloc.add(CounterEvent.decrement),
+                      ),
+                      CupertinoButton(
+                        child: Icon(CupertinoIcons.restart,
+                            size: 50,
+                            color: BuildTheme.getIOSIconColor(context)),
+                        onPressed: () => bloc.add(CounterEvent.reset),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            )
+          ],
+        ))
+      ],
+    ));
   }
 }
 
 class _AndroidCounterScreen extends StatelessWidget {
-  _AndroidCounterScreen({super.key, required this.title});
+  const _AndroidCounterScreen({super.key, required this.title});
   final String title;
 
   @override

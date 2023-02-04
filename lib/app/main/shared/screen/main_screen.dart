@@ -97,14 +97,19 @@ class _IOSMain extends StatelessWidget {
                                           color: BuildTheme.getIOSIconColor(
                                               context)),
                                   title: Text(option.name),
-                                  subtitle: const Text('0'),
-                                  trailing: option.isGlobal
+                                  subtitle: item.buildBlocGlobal(
+                                      option,
+                                      blocs[item.name],
+                                      (context, state) => Text('$state')),
+                                  trailing: option.isGlobal == true
                                       ? Icon(CupertinoIcons.share_up,
                                           color: BuildTheme.getIOSIconColor(
                                               context))
-                                      : Icon(CupertinoIcons.lock_circle,
+                                      : Icon(
+                                          CupertinoIcons.lock_circle,
                                           color: BuildTheme.getIOSIconColor(
-                                              context)),
+                                              context),
+                                        ),
                                   onTap: () {
                                     item.renderScreen(
                                         option,
