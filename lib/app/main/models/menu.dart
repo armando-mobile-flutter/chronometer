@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:chronometer/app/main/counter/counter_screen.dart';
+
+typedef PushScreen = void Function(Widget widget);
 
 class Menu {
   int _id = 0;
@@ -36,13 +39,33 @@ class Menu {
     _options = obj['options'];
   }
 
-  /// Function that render screen by meu option
-  void renderScreen(MenuOption option, Function pushScreen) {
-    if (this._name == 'Counter') {
+  /// Function that render screen by menu option
+  void renderScreen(MenuOption option, PushScreen pushScreen) {
+    if (_name == 'Counter') {
       pushScreen((option.name == 'Global')
           ? CouterScreenWithGlobalState()
           : CouterScreenWithLocalState());
     }
+  }
+
+  Widget? buildBlocGlobal(
+      MenuOption option, Bloc? bloc, BlocWidgetBuilder builder) {
+    final Widget? widget;
+
+    if (option.isGlobal) {
+      switch (_name) {
+        case 'Counter':
+          widget = BlocBuilder(bloc: bloc, builder: builder);
+          break;
+        default:
+          widget = null;
+          break;
+      }
+    } else {
+      widget = null;
+    }
+
+    return widget;
   }
 }
 
