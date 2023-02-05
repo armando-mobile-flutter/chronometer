@@ -28,7 +28,6 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Create variable for each bloc
     blocs['Counter'] = BlocProvider.of<CounterBloc>(context);
     blocs['Stopwatch'] = BlocProvider.of<StopwatchBloc>(context);
 
