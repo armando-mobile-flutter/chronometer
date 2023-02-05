@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:chronometer/app/main/blocs/stopwatch/stopwatch_event.dart';
 import 'package:chronometer/app/main/blocs/stopwatch/stopwatch_state.dart';
+import 'package:chronometer/app/main/shared/utils/build_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Theme;
@@ -29,18 +31,105 @@ class StopwatchScreenWithLocalState extends StatelessWidget {
 }
 
 class _IOSStopwatchScreen extends StatelessWidget {
-  _IOSStopwatchScreen({super.key, required this.title});
+  const _IOSStopwatchScreen({super.key, required this.title});
   final String title;
 
   @override
   Widget build(BuildContext context) {
     final bloc = BlocProvider.of<StopwatchBloc>(context);
-    return CupertinoPageScaffold(child: Text('Hola'));
+    return CupertinoPageScaffold(
+        child: BlocListener<StopwatchBloc, StopwatchState>(
+      bloc: bloc,
+      listener: (context, state) {
+        if (state.isSpecial) {
+          Timer? timer = Timer(const Duration(seconds: 1),
+              () => Navigator.of(context, rootNavigator: true).pop());
+
+          showCupertinoModalPopup(
+              context: context,
+              builder: (context) => CupertinoAlertDialog(
+                    title: const Text('Stopwatch Alert'),
+                    content: Text(state.timeFormated),
+                  )).then((value) {
+            timer?.cancel();
+            timer = null;
+          });
+        }
+      },
+      child: CustomScrollView(
+        slivers: <Widget>[
+          CupertinoSliverNavigationBar(
+              leading: CupertinoButton(
+                child: Icon(CupertinoIcons.back,
+                    size: 32, color: BuildTheme.getIOSIconColor(context)),
+                padding: EdgeInsets.zero,
+                onPressed: () => Navigator.pop(context),
+              ),
+              largeTitle: Text(title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 20.0))),
+          SliverFillRemaining(
+            child: Stack(
+              alignment: AlignmentDirectional.centerStart,
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Center(
+                      child: BlocBuilder(
+                        bloc: bloc,
+                        builder: (BuildContext context, StopwatchState state) =>
+                            Text(state.timeFormated,
+                                style: const TextStyle(
+                                    fontSize: 60, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                    const SizedBox(height: 160.0),
+                    Center(
+                        child: BlocBuilder(
+                      bloc: bloc,
+                      buildWhen:
+                          (StopwatchState previous, StopwatchState current) =>
+                              previous.isInitial != current.isInitial ||
+                              previous.isRunning != current.isRunning,
+                      builder: (BuildContext context, StopwatchState state) =>
+                          Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          if (state.isRunning)
+                            CupertinoButton(
+                                child: Icon(CupertinoIcons.stop,
+                                    size: 50,
+                                    color: BuildTheme.getIOSIconColor(context)),
+                                onPressed: () => bloc.add(StopStopwatch()))
+                          else
+                            CupertinoButton(
+                                child: Icon(CupertinoIcons.play_arrow,
+                                    size: 50,
+                                    color: BuildTheme.getIOSIconColor(context)),
+                                onPressed: () => bloc.add(StartStopwatch())),
+                          if (!state.isInitial)
+                            CupertinoButton(
+                                child: Icon(CupertinoIcons.restart,
+                                    size: 50,
+                                    color: BuildTheme.getIOSIconColor(context)),
+                                onPressed: () => bloc.add(ResetStopwatch()))
+                        ],
+                      ),
+                    ))
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    ));
   }
 }
 
 class _AndroidStopwatchScreen extends StatelessWidget {
-  _AndroidStopwatchScreen({super.key, required this.title});
+  const _AndroidStopwatchScreen({super.key, required this.title});
   final String title;
 
   @override
@@ -71,13 +160,12 @@ class _AndroidStopwatchScreen extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: BlocBuilder(
             bloc: bloc,
-            buildWhen:
-                (StopwatchState previousState, StopwatchState currentState) =>
-                    previousState.isInitial != currentState.isInitial ||
-                    previousState.isRunning != currentState.isRunning,
+            buildWhen: (StopwatchState previous, StopwatchState current) =>
+                previous.isInitial != current.isInitial ||
+                previous.isRunning != current.isRunning,
             builder: (BuildContext context, StopwatchState state) => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[

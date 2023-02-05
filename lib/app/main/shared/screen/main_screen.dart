@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -54,15 +55,24 @@ class _IOSMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MultiBlocListener(
           listeners: [
-            BlocListener(
-                bloc: blocs['Counter'],
-                listener: (context, state) => (state == 10)
-                    ? showDialog(
+            BlocListener<CounterBloc, int>(
+                bloc: blocs['Counter'] as CounterBloc,
+                listener: (context, state) {
+                  if (state == 10) {
+                    Timer? timer = Timer(const Duration(seconds: 1),
+                        () => Navigator.of(context, rootNavigator: true).pop());
+
+                    showCupertinoModalPopup(
                         context: context,
-                        builder: (_) => AlertDialog(
-                              content: Text('Count: $state'),
-                            ))
-                    : null),
+                        builder: (context) => CupertinoAlertDialog(
+                              title: const Text('Counter Alert'),
+                              content: Text('$state'),
+                            )).then((value) {
+                      timer?.cancel();
+                      timer = null;
+                    });
+                  }
+                }),
             BlocListener<StopwatchBloc, StopwatchState>(
               bloc: blocs['Stopwatch'] as StopwatchBloc?,
               listener: (context, state) =>
@@ -112,7 +122,7 @@ class _IOSMain extends StatelessWidget {
                                   subtitle: item
                                       .buildBlocGlobal(option, blocs[item.name],
                                           (context, state) {
-                                    Widget widget = const Text('');
+                                    Widget? widget;
 
                                     switch (item.name) {
                                       case 'Counter':
@@ -123,7 +133,7 @@ class _IOSMain extends StatelessWidget {
                                         break;
                                     }
 
-                                    return widget;
+                                    return widget!;
                                   }),
                                   trailing: option.isGlobal == true
                                       ? Icon(CupertinoIcons.share_up,
@@ -167,8 +177,8 @@ class _AndroidMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MultiBlocListener(
           listeners: [
-            BlocListener(
-                bloc: blocs['Counter'],
+            BlocListener<CounterBloc, int>(
+                bloc: blocs['Counter'] as CounterBloc,
                 listener: (context, state) => (state == 10)
                     ? showDialog(
                         context: context,
@@ -213,7 +223,7 @@ class _AndroidMain extends StatelessWidget {
                                 title: Text(option.name),
                                 subtitle: item.buildBlocGlobal(
                                     option, blocs[item.name], (context, state) {
-                                  Widget widget = const Text('');
+                                  Widget? widget;
 
                                   switch (item.name) {
                                     case 'Counter':
@@ -224,7 +234,7 @@ class _AndroidMain extends StatelessWidget {
                                       break;
                                   }
 
-                                  return widget;
+                                  return widget!;
                                 }),
                                 trailing: option.isGlobal
                                     ? Icon(Icons.lock_open)
