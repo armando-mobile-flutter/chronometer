@@ -1,11 +1,14 @@
-import 'package:chronometer/app/main/blocs/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:chronometer/app/main/blocs/index.dart';
+import 'package:chronometer/app/main/blocs/stopwatch/stopwatch_event.dart';
+import 'package:chronometer/app/main/blocs/stopwatch/stopwatch_state.dart';
+import 'package:chronometer/app/main/stopwatch/stopwatch_screen.dart';
 import 'package:chronometer/app/main/models/index.dart';
 import 'package:chronometer/app/main/shared/screen/theme_selector_screen.dart';
 import 'package:chronometer/app/main/shared/utils/index.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -26,6 +29,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     //TODO: Create variable for each bloc
     blocs['Counter'] = BlocProvider.of<CounterBloc>(context);
+    blocs['Stopwatch'] = BlocProvider.of<StopwatchBloc>(context);
 
     return (defaultTargetPlatform == TargetPlatform.iOS)
         ? _IOSMain(blocs: blocs, title: title, menu: menu)
@@ -58,7 +62,15 @@ class _IOSMain extends StatelessWidget {
                         builder: (_) => AlertDialog(
                               content: Text('Count: $state'),
                             ))
-                    : null)
+                    : null),
+            BlocListener<StopwatchBloc, StopwatchState>(
+              bloc: blocs['Stopwatch'] as StopwatchBloc?,
+              listener: (context, state) =>
+                  (state.time.inMilliseconds == 10000 &&
+                          !Navigator.of(context).canPop())
+                      ? _pushScreen(context, StopwatchScreenWithGlobalState())
+                      : null,
+            )
           ],
           child: CupertinoPageScaffold(
             child: CustomScrollView(
@@ -97,10 +109,22 @@ class _IOSMain extends StatelessWidget {
                                           color: BuildTheme.getIOSIconColor(
                                               context)),
                                   title: Text(option.name),
-                                  subtitle: item.buildBlocGlobal(
-                                      option,
-                                      blocs[item.name],
-                                      (context, state) => Text('$state')),
+                                  subtitle: item
+                                      .buildBlocGlobal(option, blocs[item.name],
+                                          (context, state) {
+                                    Widget widget = const Text('');
+
+                                    switch (item.name) {
+                                      case 'Counter':
+                                        widget = Text('$state');
+                                        break;
+                                      case 'Stopwatch':
+                                        widget = Text('${state.timeFormated}');
+                                        break;
+                                    }
+
+                                    return widget;
+                                  }),
                                   trailing: option.isGlobal == true
                                       ? Icon(CupertinoIcons.share_up,
                                           color: BuildTheme.getIOSIconColor(
@@ -151,7 +175,15 @@ class _AndroidMain extends StatelessWidget {
                         builder: (_) => AlertDialog(
                               content: Text('Count: $state'),
                             ))
-                    : null)
+                    : null),
+            BlocListener<StopwatchBloc, StopwatchState>(
+              bloc: blocs['Stopwatch'] as StopwatchBloc?,
+              listener: (context, state) =>
+                  (state.time.inMilliseconds == 10000 &&
+                          !Navigator.of(context).canPop())
+                      ? _pushScreen(context, StopwatchScreenWithGlobalState())
+                      : null,
+            )
           ],
           child: Scaffold(
               appBar: AppBar(
@@ -180,9 +212,20 @@ class _AndroidMain extends StatelessWidget {
                                     : Icon(Icons.timer),
                                 title: Text(option.name),
                                 subtitle: item.buildBlocGlobal(
-                                    option,
-                                    blocs[item.name],
-                                    (context, state) => Text('$state')),
+                                    option, blocs[item.name], (context, state) {
+                                  Widget widget = const Text('');
+
+                                  switch (item.name) {
+                                    case 'Counter':
+                                      widget = Text('$state');
+                                      break;
+                                    case 'Stopwatch':
+                                      widget = Text('${state.timeFormated}');
+                                      break;
+                                  }
+
+                                  return widget;
+                                }),
                                 trailing: option.isGlobal
                                     ? Icon(Icons.lock_open)
                                     : Icon(Icons.lock),
@@ -194,9 +237,21 @@ class _AndroidMain extends StatelessWidget {
                                 },
                                 onLongPress: option.isGlobal == true
                                     ? () {
-                                        if (item.name == 'Counter') {
-                                          blocs[item.name]!
-                                              .add(CounterEvent.increment);
+                                        switch (item.name) {
+                                          case 'Counter':
+                                            blocs[item.name]!
+                                                .add(CounterEvent.increment);
+                                            break;
+                                          case 'Stopwatch':
+                                            final stopwatchBloc =
+                                                blocs[item.name]
+                                                    as StopwatchBloc;
+
+                                            blocs[item.name]!.add(
+                                                stopwatchBloc.state.isRunning
+                                                    ? StopStopwatch()
+                                                    : StartStopwatch());
+                                            break;
                                         }
                                       }
                                     : null,

@@ -28,7 +28,9 @@ class App extends StatelessWidget {
           child: MultiBlocProvider(
               providers: [
                 BlocProvider<PreferencesBloc>.value(value: preferencesBloc),
-                BlocProvider<CounterBloc>(create: (context) => CounterBloc())
+                BlocProvider<CounterBloc>(create: (context) => CounterBloc()),
+                BlocProvider<StopwatchBloc>(
+                    create: (context) => StopwatchBloc())
               ],
               child: BlocBuilder<PreferencesBloc, PreferencesState>(
                 builder: (context, state) =>

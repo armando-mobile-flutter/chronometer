@@ -1,3 +1,4 @@
+import 'package:chronometer/app/main/stopwatch/stopwatch_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:chronometer/app/main/counter/counter_screen.dart';
@@ -41,32 +42,23 @@ class Menu {
 
   /// Function that render screen by menu option
   void renderScreen(MenuOption option, PushScreen pushScreen) {
-    if (_name == 'Counter') {
-      pushScreen((option.name == 'Global')
-          ? CouterScreenWithGlobalState()
-          : CouterScreenWithLocalState());
+    switch (_name) {
+      case 'Counter':
+        pushScreen((option.isGlobal == true)
+            ? CouterScreenWithGlobalState()
+            : CouterScreenWithLocalState());
+        break;
+      case 'Stopwatch':
+        pushScreen((option.isGlobal == true)
+            ? StopwatchScreenWithGlobalState()
+            : StopwatchScreenWithLocalState());
+        break;
     }
   }
 
   Widget? buildBlocGlobal(
-      MenuOption option, Bloc? bloc, BlocWidgetBuilder builder) {
-    final Widget? widget;
-
-    if (option.isGlobal) {
-      switch (_name) {
-        case 'Counter':
-          widget = BlocBuilder(bloc: bloc, builder: builder);
-          break;
-        default:
-          widget = null;
-          break;
-      }
-    } else {
-      widget = null;
-    }
-
-    return widget;
-  }
+          MenuOption option, Bloc? bloc, BlocWidgetBuilder builder) =>
+      (option.isGlobal) ? BlocBuilder(bloc: bloc, builder: builder) : null;
 }
 
 class MenuOption {
