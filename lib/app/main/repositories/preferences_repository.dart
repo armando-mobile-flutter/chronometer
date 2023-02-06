@@ -7,11 +7,11 @@ class PreferencesRepository implements IPreferencesRepository {
   final Future<SharedPreferences> _pref = SharedPreferences.getInstance();
 
   @override
-  Future<Theme> getTheme() async {
+  Future<Theme?> getTheme() async {
     final prefs = await _pref;
     final index = prefs.getInt(_themeIndexKey);
 
-    return index != null ? Theme.values[index] : Theme.dart;
+    return index != null ? Theme.values[index] : null;
   }
 
   @override

@@ -10,8 +10,7 @@ class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
   PreferencesBloc(
       {required IPreferencesRepository preferencesRepository,
       PreferencesState? initialState})
-      : assert(preferencesRepository != null),
-        _preferencesRepository = preferencesRepository,
+      : _preferencesRepository = preferencesRepository,
         super(initialState ?? PreferencesNotLoaded()) {
     on<LoadPreferences>((event, emit) async {
       final theme = await _preferencesRepository.getTheme();
