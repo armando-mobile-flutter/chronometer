@@ -47,9 +47,13 @@ class _IOSStopwatchScreen extends StatelessWidget {
 
           showCupertinoModalPopup(
               context: context,
-              builder: (context) => CupertinoAlertDialog(
-                    title: const Text('Stopwatch Alert'),
-                    content: Text(state.timeFormated),
+              builder: (context) => CupertinoPopupSurface(
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      height: 100,
+                      child: Text(state.timeFormated),
+                    ),
                   )).then((value) {
             timer?.cancel();
             timer = null;
