@@ -12,18 +12,25 @@ class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
       PreferencesState? initialState})
       : _preferencesRepository = preferencesRepository,
         super(initialState ?? PreferencesNotLoaded()) {
-    on<LoadPreferences>((event, emit) async {
-      final theme = await _preferencesRepository.getTheme();
+    on<LoadPreferences>(_onLoadPreferences);
+    on<UpdateTheme>(_onUpdateTheme);
+  }
 
-      return (theme == null)
-          ? emit(const PreferencesLoaded(theme: Theme.dart))
-          : add(UpdateTheme(theme));
-    });
+  Future<void> _onLoadPreferences(
+      LoadPreferences event, Emitter<PreferencesState> emit) async {
+    final theme = await _preferencesRepository.getTheme();
 
-    on<UpdateTheme>((event, emit) async {
-      await _preferencesRepository.setTheme(event.theme);
+    if (theme == null) {
+      emit(const PreferencesLoaded(theme: Theme.dart));
+    } else {
+      add(UpdateTheme(theme));
+    }
+  }
 
-      return emit(PreferencesLoaded(theme: event.theme));
-    });
+  Future<void> _onUpdateTheme(
+      UpdateTheme event, Emitter<PreferencesState> emit) async {
+    await _preferencesRepository.setTheme(event.theme);
+
+    emit(PreferencesLoaded(theme: event.theme));
   }
 }
