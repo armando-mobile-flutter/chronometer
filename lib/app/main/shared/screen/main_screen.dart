@@ -74,11 +74,11 @@ class _IOSMain extends StatelessWidget {
                 }),
             BlocListener<StopwatchBloc, StopwatchState>(
               bloc: blocs['Stopwatch'] as StopwatchBloc?,
-              listener: (context, state) =>
-                  (state.time.inMilliseconds == 10000 &&
-                          !Navigator.of(context).canPop())
-                      ? _pushScreen(context, StopwatchScreenWithGlobalState())
-                      : null,
+              listener: (context, state) => (state.time.inMilliseconds ==
+                          10000 &&
+                      !Navigator.of(context).canPop())
+                  ? _pushScreen(context, const StopwatchScreenWithGlobalState())
+                  : null,
             )
           ],
           child: CupertinoPageScaffold(
@@ -89,16 +89,16 @@ class _IOSMain extends StatelessWidget {
                       color: BuildTheme.getIOSIconColor(context)),
                   largeTitle: Text(title,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 20.0)),
+                      style: const TextStyle(fontSize: 20.0)),
                   trailing: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () =>
+                        _pushScreen(context, const ThemeSelectorScreen()),
                     child: Icon(
                       CupertinoIcons.settings,
                       size: 32,
                       color: BuildTheme.getIOSIconColor(context),
                     ),
-                    padding: EdgeInsets.zero,
-                    onPressed: () =>
-                        _pushScreen(context, const ThemeSelectorScreen()),
                   ),
                 ),
                 SliverFillRemaining(
@@ -187,11 +187,11 @@ class _AndroidMain extends StatelessWidget {
                     : null),
             BlocListener<StopwatchBloc, StopwatchState>(
               bloc: blocs['Stopwatch'] as StopwatchBloc?,
-              listener: (context, state) =>
-                  (state.time.inMilliseconds == 10000 &&
-                          !Navigator.of(context).canPop())
-                      ? _pushScreen(context, StopwatchScreenWithGlobalState())
-                      : null,
+              listener: (context, state) => (state.time.inMilliseconds ==
+                          10000 &&
+                      !Navigator.of(context).canPop())
+                  ? _pushScreen(context, const StopwatchScreenWithGlobalState())
+                  : null,
             )
           ],
           child: Scaffold(
@@ -211,14 +211,14 @@ class _AndroidMain extends StatelessWidget {
                 children: [
                   ...menu.map((Menu item) => Column(
                         children: <Widget>[
-                          Container(
+                          SizedBox(
                             height: 30,
                             child: Text(item.name, textAlign: TextAlign.start),
                           ),
                           ...item.options.map((MenuOption option) => ListTile(
                                 leading: item.name == 'Counter'
-                                    ? Icon(Icons.add_circle_outline)
-                                    : Icon(Icons.timer),
+                                    ? const Icon(Icons.add_circle_outline)
+                                    : const Icon(Icons.timer),
                                 title: Text(option.name),
                                 subtitle: item.buildBlocGlobal(
                                     option, blocs[item.name], (context, state) {
@@ -236,8 +236,8 @@ class _AndroidMain extends StatelessWidget {
                                   return widget!;
                                 }),
                                 trailing: option.isGlobal
-                                    ? Icon(Icons.lock_open)
-                                    : Icon(Icons.lock),
+                                    ? const Icon(Icons.lock_open)
+                                    : const Icon(Icons.lock),
                                 onTap: () {
                                   item.renderScreen(
                                       option,

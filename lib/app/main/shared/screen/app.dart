@@ -10,7 +10,7 @@ import 'package:chronometer/app/main/shared/utils/index.dart';
 import 'package:chronometer/app/main/models/index.dart';
 
 class App extends StatelessWidget {
-  var blocBuilding = BlocBuilding.initialize();
+  final blocBuilding = BlocBuilding.initialize();
   final String title = 'Chronometer';
   App({super.key});
 

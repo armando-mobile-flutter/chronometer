@@ -20,6 +20,7 @@ class StopwatchScreenWithGlobalState extends StatelessWidget {
 }
 
 class StopwatchScreenWithLocalState extends StatelessWidget {
+  const StopwatchScreenWithLocalState({super.key});
   final String title = 'Stopwatch - Local State';
 
   @override
@@ -64,10 +65,10 @@ class _IOSStopwatchScreen extends StatelessWidget {
         slivers: <Widget>[
           CupertinoSliverNavigationBar(
               leading: CupertinoButton(
-                child: Icon(CupertinoIcons.back,
-                    size: 32, color: BuildTheme.getIOSIconColor(context)),
                 padding: EdgeInsets.zero,
                 onPressed: () => Navigator.pop(context),
+                child: Icon(CupertinoIcons.back,
+                    size: 32, color: BuildTheme.getIOSIconColor(context)),
               ),
               largeTitle: Text(title,
                   textAlign: TextAlign.center,

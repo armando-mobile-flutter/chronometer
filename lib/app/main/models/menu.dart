@@ -23,7 +23,7 @@ class Menu {
 
   // Create iterator map from model
   Map<String, dynamic> toMap() {
-    var map = Map<String, dynamic>();
+    var map = <String, dynamic>{};
 
     map['name'] = _name;
     map['options'] = _options;
@@ -45,13 +45,13 @@ class Menu {
     switch (_name) {
       case 'Counter':
         pushScreen((option.isGlobal == true)
-            ? CouterScreenWithGlobalState()
-            : CouterScreenWithLocalState());
+            ? const CouterScreenWithGlobalState()
+            : const CouterScreenWithLocalState());
         break;
       case 'Stopwatch':
         pushScreen((option.isGlobal == true)
-            ? StopwatchScreenWithGlobalState()
-            : StopwatchScreenWithLocalState());
+            ? const StopwatchScreenWithGlobalState()
+            : const StopwatchScreenWithLocalState());
         break;
     }
   }
@@ -79,7 +79,7 @@ class MenuOption {
 
   // Create iterator map from model
   Map<String, dynamic> toMap() {
-    var map = Map<String, dynamic>();
+    var map = <String, dynamic>{};
 
     map['name'] = _name;
     map['isGlobal'] = _isGlobal;

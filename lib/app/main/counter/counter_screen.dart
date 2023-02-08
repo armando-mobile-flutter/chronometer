@@ -17,6 +17,7 @@ class CouterScreenWithGlobalState extends StatelessWidget {
 }
 
 class CouterScreenWithLocalState extends StatelessWidget {
+  const CouterScreenWithLocalState({super.key});
   final String title = 'Counter - Local State';
 
   @override
@@ -40,13 +41,14 @@ class _IOSCounterScreen extends StatelessWidget {
       slivers: <Widget>[
         CupertinoSliverNavigationBar(
             leading: CupertinoButton(
-              child: Icon(CupertinoIcons.back,
-                  size: 32, color: BuildTheme.getIOSIconColor(context)),
               padding: EdgeInsets.zero,
               onPressed: () => Navigator.pop(context),
+              child: Icon(CupertinoIcons.back,
+                  size: 32, color: BuildTheme.getIOSIconColor(context)),
             ),
             largeTitle: Text(title,
-                textAlign: TextAlign.center, style: TextStyle(fontSize: 20.0))),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 20.0))),
         SliverFillRemaining(
             child: Stack(
           alignment: AlignmentDirectional.centerStart,
@@ -113,7 +115,8 @@ class _AndroidCounterScreen extends StatelessWidget {
           child: BlocBuilder(
             bloc: bloc,
             builder: (context, state) => Text('$state',
-                style: TextStyle(fontSize: 100, fontWeight: FontWeight.bold)),
+                style: const TextStyle(
+                    fontSize: 100, fontWeight: FontWeight.bold)),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

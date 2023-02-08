@@ -45,10 +45,10 @@ class _IOSThemeSelectorScreen extends StatelessWidget {
       navigationBar: CupertinoNavigationBar(
         middle: const Text('Theme'),
         leading: CupertinoButton(
-          child: Icon(CupertinoIcons.back,
-              size: 32, color: BuildTheme.getIOSIconColor(context)),
           padding: EdgeInsets.zero,
           onPressed: () => Navigator.pop(context),
+          child: Icon(CupertinoIcons.back,
+              size: 32, color: BuildTheme.getIOSIconColor(context)),
         ),
       ),
       child: BlocBuilder<PreferencesBloc, PreferencesState>(
